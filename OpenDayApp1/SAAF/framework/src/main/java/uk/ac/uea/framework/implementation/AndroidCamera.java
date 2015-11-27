@@ -47,18 +47,18 @@ public class AndroidCamera extends Fragment implements Camera {
     //Capture Request Session
     //Submit a CaptureRequest to CaptureRequestSession (setReapeatingRequest())
     //Data comes back through CameraCaptureSession.CaptureCallback
-    private Context con;
-    private CameraManager mManager; //manager
-    private AutofitTextureView mSurface; //surface
-    private CameraDevice mDevice; //device
+    private Context con; //App context, used to access hardware
+    private CameraManager mManager; //Manager class for all cameras on device
+    private AutofitTextureView mSurface; //Display surface for preview, auto-scales
+    private CameraDevice mDevice; //Device object (camera)
     private CaptureRequest.Builder mBuilder; //Request Builder
-    private CaptureRequest mRequest; //request
-    private CameraCaptureSession mSession; //session
-    private Size cameraSize;
+    private CaptureRequest mRequest; //Request
+    private CameraCaptureSession mSession; //Session
+    private Size cameraSize; //Size object for final photo
 
     //Fields passed in from main Java/XML
-    private int deviceHeight;
-    private int deviceWidth;
+    private int deviceHeight; //height from hardware
+    private int deviceWidth; //width from hardware
 
     /**
      * Singleton constructor, behaviour will be implemented in abstract factory {@Link AndroidCameraFactory}
@@ -99,6 +99,9 @@ public class AndroidCamera extends Fragment implements Camera {
 
     };
 
+    /**
+     * Nested inner class used for defining behaviour in the frame. Not needed as we are not capturing photos
+     */
     private CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
         private void process(CaptureResult result) {
             //Would need to process this normally, but as it's just a preview I think we're good.
@@ -155,7 +158,7 @@ public class AndroidCamera extends Fragment implements Camera {
     }
 
     /**
-     * Call this first - without a context you are buggered
+     * Call this first - without a context you are buggered, puts context to class
      * @param context
      */
     public void setContext(Context context){
@@ -166,6 +169,11 @@ public class AndroidCamera extends Fragment implements Camera {
         //Still need to do this
     }
 
+    /**
+     * Collects all supported resolutions, picks smallest given size of screen and size of JPG
+     * @param height
+     * @param width
+     */
     public void chooseBestCameraSize(int height, int width){
         try{
             // Collect the supported resolutions that are at least as big as the preview Surface
@@ -196,6 +204,9 @@ public class AndroidCamera extends Fragment implements Camera {
         }
     }
 
+    /**
+     * Creates the camera preview
+     */
     public void createCameraPreview(){
         try{
             SurfaceTexture texture = mSurface.getSurfaceTexture();
@@ -216,6 +227,9 @@ public class AndroidCamera extends Fragment implements Camera {
 
     }
 
+    /**
+     * Opens the camera on first use
+     */
     public void openCamera(){
         mManager = (CameraManager) con.getSystemService(Context.CAMERA_SERVICE);
         try{
@@ -236,14 +250,25 @@ public class AndroidCamera extends Fragment implements Camera {
 
     }
 
+    /**
+     * Closes the camera
+     */
     public void closeCamera(){
         mDevice.close();
     }
 
+    /**
+     * Sets screen height
+     * @param height
+     */
     public void setHeight(int height){
         deviceHeight = height;
     }
 
+    /**
+     * Sets screen width
+     * @param width
+     */
     public void setWidth(int width){
         deviceWidth = width;
     }
