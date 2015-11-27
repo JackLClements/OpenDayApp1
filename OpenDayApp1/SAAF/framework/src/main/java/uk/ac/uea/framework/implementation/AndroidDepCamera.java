@@ -33,29 +33,22 @@ public class AndroidDepCamera extends Fragment implements Camera {
         //
     }
 
+    public void openCamera(){
+
+    }
+
     public void closeCamera(){
         //
     }
 
-    public void preCapture(){
-        //
-    }
-
-    public void capturePicture(){
-        //
-    }
-
-    public void unlockFocus(){
-        //
-    }
-
-    public void captureMessage(){
+    public void captureMessage(String string){
         final Activity activity = getActivity();
+        final String str = string;
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(activity, "Picture Saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, str, Toast.LENGTH_SHORT).show();
                 }
             });
         }

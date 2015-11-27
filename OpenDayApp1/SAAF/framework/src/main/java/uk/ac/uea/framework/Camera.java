@@ -63,15 +63,11 @@ public interface Camera{
 
     public void createCameraPreview();
 
+    public void openCamera();
+
     public void closeCamera();
 
-    public void preCapture();
-
-    public void capturePicture();
-
-    public void unlockFocus();
-
-    public void captureMessage();
+    public void captureMessage(String string);
 
     //Either static class or method to set permission for camera
 

@@ -33,23 +33,15 @@ public class AndroidCameraFactory implements Camera{
         camera.createCameraPreview();
     }
 
+    public void openCamera(){
+        camera.openCamera();
+    }
+
     public void closeCamera(){
         camera.closeCamera();
     }
 
-    public void preCapture(){
-        camera.preCapture();
-    }
-
-    public void capturePicture(){
-        camera.capturePicture();
-    }
-
-    public void unlockFocus(){
-        camera.unlockFocus();
-    }
-
-    public void captureMessage(){
-        camera.captureMessage();
+    public void captureMessage(String string){
+        camera.captureMessage(string);
     }
 }
