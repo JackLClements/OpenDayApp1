@@ -47,7 +47,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 System.out.println("Ayyyy");
             }
             AutofitTextureView newView = (AutofitTextureView) view;
-            System.out.println("VIEW CREATED");
+
             camera.setPreview(newView);
             camera.addActivity(getActivity());
 
@@ -60,7 +60,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         else{
 
         }
-        System.out.println("ONSTART IS DEAD");
     }
 
 
@@ -96,7 +95,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
 
     public void onResume(){
-        System.out.println("ON RESUME CALLED");
         super.onResume();
         System.out.println(camera.textureViewStatus());
         if(camera.textureViewStatus()){
@@ -106,15 +104,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         else{
             camera.setSurfaceTextureListener();
         }
-        // When the screen is turned off and turned back on, the SurfaceTexture is already
-        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
-        // the SurfaceTextureListener).
-        //if (camera.getSurface().isAvailable()) {
-        //    camera.openCamera();
-        //} else {
-            //camera.getSurface().setSurfaceTextureListener(camera.getmSurfaceTextureListener());
-        //}
     }
 
     public void onPause(){
