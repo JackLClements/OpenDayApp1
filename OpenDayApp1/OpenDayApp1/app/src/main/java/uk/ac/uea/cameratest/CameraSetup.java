@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import uk.ac.uea.framework.implementation.AndroidCameraFactory;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
 
 import java.io.File;
@@ -25,12 +26,12 @@ import uk.ac.uea.framework.implementation.AutofitTextureView;
 public class CameraSetup extends Fragment implements View.OnClickListener{
     boolean init;
     View view;
-    AndroidCamera camera;
+    AndroidCameraFactory camera;
     AutofitTextureView preview;
 
     @TargetApi(23)
     public CameraSetup(){
-        camera = new AndroidCamera();
+        camera = new AndroidCameraFactory();
     }
 
     public void addTexture(AutofitTextureView texture){

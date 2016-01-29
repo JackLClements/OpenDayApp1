@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.support.annotation.NonNull;
 import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.widget.Toast;
 import android.hardware.Camera;
 
@@ -19,41 +21,45 @@ public class AndroidDepCamera extends Fragment implements uk.ac.uea.framework.Ca
     android.hardware.Camera cam;
     Activity activity;
     AutofitTextureView preview;
-    Preview depPreview;
+
     //TODO
     //Method code
     //Any fields
     //Constructors
     //http://developer.android.com/guide/topics/media/camera.html
 
-    //Nested Classes
-    private static class Preview extends SurfaceView implements SurfaceHolder.Callback{
-        private SurfaceHolder pHolder;
-        private Camera pCamera;
 
-        public Preview(Context context, Camera camera){
-            super(context);
-            pCamera = camera;
-        }
+    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener(){
 
-        //method to set holder
-
-        public void surfaceCreated(SurfaceHolder holder){
-
-        }
-
-        public void surfaceDestroyed(SurfaceHolder holder){
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
+            openCamera(height, width);
+            try{
+                cam.setPreviewTexture(texture);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+            cam.startPreview();
 
         }
 
-        public void surfaceChanged(SurfaceHolder holder, int format, int height, int width){
-
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
+            //configureTransform(width, height);
         }
 
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
+            cam.stopPreview();
+            cam.release();
+            return true;
+        }
 
-
-
-    }
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture texture) {
+        }
+    };
 
     //Static methods
 
@@ -86,17 +92,12 @@ public class AndroidDepCamera extends Fragment implements uk.ac.uea.framework.Ca
     }
 
     public void createCameraPreview(){
-        //
+
     }
 
-    public void openCamera(){
-       cam = android.hardware.Camera.open();
-        //get settings from getParameters();
-        //No real need to modify? Could add later
-        //setDisplayOrientation
-        //Pass an initialised SurfaceHolder to setPreviewDisplay(surface)
-        //Call startPreview()
-        //When quitting call stopPreview()
+    public void openCamera(int height, int width){
+        cam = AndroidDepCamera.getCameraInstance();
+        cam = android.hardware.Camera.open();
     }
 
     public void closeCamera(){
@@ -109,6 +110,19 @@ public class AndroidDepCamera extends Fragment implements uk.ac.uea.framework.Ca
 
     public void setPreview(AutofitTextureView texture){
         preview = texture;
+    }
+
+    public void setSurfaceTextureListener(){
+        preview.setSurfaceTextureListener(mSurfaceTextureListener);
+    }
+
+    public boolean textureViewStatus(){
+        if(preview.isAvailable()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public void captureMessage(String string){

@@ -93,7 +93,7 @@ public class AndroidCamera implements Camera {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
-            openCamera(width, height);
+            openCamera(width, height); //NOTE TO SELF - test ths when you get home, I think it might be wrong?
         }
 
         @Override
@@ -364,8 +364,6 @@ public class AndroidCamera implements Camera {
         matrix.setRectToRect(viewR, bufferR, Matrix.ScaleToFit.FILL);
         float scale = Math.max((float) height / 1080, (float) width / 1920);
         matrix.postScale(scale, scale, centerX, centerY);
-
-
         preview.setTransform(matrix);
     }
 

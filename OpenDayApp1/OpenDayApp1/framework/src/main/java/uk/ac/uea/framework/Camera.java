@@ -1,5 +1,6 @@
 package uk.ac.uea.framework;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import uk.ac.uea.framework.implementation.AutofitTextureView;
 
 /**
  * Created by Jack L. Clements on 23/11/2015.
@@ -63,11 +66,22 @@ public interface Camera{
 
     public void createCameraPreview();
 
-    public void openCamera();
+    public void openCamera(int height, int width);
 
     public void closeCamera();
 
     public void captureMessage(String string);
+
+    public void setPreview(AutofitTextureView texture);
+
+    public void addActivity(Activity activity);
+
+    public void setSurfaceTextureListener();
+
+    public boolean textureViewStatus();
+
+
+
 
     //Either static class or method to set permission for camera
 

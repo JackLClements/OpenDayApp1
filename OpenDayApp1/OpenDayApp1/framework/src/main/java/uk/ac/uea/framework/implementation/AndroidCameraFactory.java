@@ -1,5 +1,6 @@
 package uk.ac.uea.framework.implementation;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import uk.ac.uea.framework.Camera;
@@ -11,7 +12,7 @@ public class AndroidCameraFactory implements Camera{
     private Camera camera;
     public AndroidCameraFactory(){
         if(android.os.Build.VERSION.SDK_INT >= 21){
-            camera = new AndroidCameraOLD();
+            camera = new AndroidCamera();
         }
         else{
             camera = new AndroidDepCamera();
@@ -31,8 +32,8 @@ public class AndroidCameraFactory implements Camera{
         camera.createCameraPreview();
     }
 
-    public void openCamera(){
-        camera.openCamera();
+    public void openCamera(int height, int width){
+        camera.openCamera(height, width);
     }
 
     public void closeCamera(){
@@ -41,6 +42,22 @@ public class AndroidCameraFactory implements Camera{
 
     public void captureMessage(String string){
         camera.captureMessage(string);
+    }
+
+    public void setPreview(AutofitTextureView texture){
+        camera.setPreview(texture);
+    }
+
+    public void addActivity(Activity activity){
+        camera.addActivity(activity);
+    }
+
+    public void setSurfaceTextureListener(){
+        camera.setSurfaceTextureListener();
+    }
+
+    public boolean textureViewStatus(){
+        return camera.textureViewStatus();
     }
 
 
