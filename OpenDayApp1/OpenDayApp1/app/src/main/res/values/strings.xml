@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CameraTest</string>
+    <string name="picture">Pic</string>
+    <string name="description_info">An app</string>
+</resources>
