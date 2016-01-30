@@ -1,7 +1,6 @@
 package uk.ac.uea.framework.implementation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,11 +11,11 @@ import uk.ac.uea.framework.Orientation;
 /**
  * Created by Jack L. Clements on 30/01/2016.
  */
-public class AndroidOrientation implements Orientation{
+public class AndroidCompass implements Orientation {
     /**Manager object for all sensors on a device */
     private SensorManager sensorM;
     /**Sensor object representing the device accelerometer */
-    private Sensor accelorometer;
+    private Sensor magneticFieldSensor;
     private Activity activity;
 
     /**
@@ -27,11 +26,8 @@ public class AndroidOrientation implements Orientation{
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             Sensor mySensor = sensorEvent.sensor;
-            if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                float x = sensorEvent.values[0];
-                float y = sensorEvent.values[1];
-                float z = sensorEvent.values[2];
-                System.out.println(x + " " + y + " " + z);
+            if(mySensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+                //code to handle magnetic field
             } //test values before calculating anything else
         }
 
@@ -41,12 +37,8 @@ public class AndroidOrientation implements Orientation{
         }
     };
 
-    //Constructor
+    public AndroidCompass(){
 
-    /**
-     * Default constructor - empty to avoid conflicts with potential asynch calls
-     */
-    public AndroidOrientation(){
     }
 
     /**
@@ -54,14 +46,14 @@ public class AndroidOrientation implements Orientation{
      */
     public void setupSensor(){
         sensorM = (SensorManager) activity.getSystemService(activity.SENSOR_SERVICE);
-        accelorometer = sensorM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magneticFieldSensor = sensorM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     /**
      * Registers the listener object to the sensor, to detect events
      */
     public void registerListener(){
-        sensorM.registerListener(mSensorEventListener, accelorometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorM.registerListener(mSensorEventListener, magneticFieldSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     /**
@@ -78,6 +70,4 @@ public class AndroidOrientation implements Orientation{
     public void setActivity(Activity activity){
         this.activity = activity;
     }
-
-
 }
