@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import uk.ac.uea.framework.implementation.AndroidCameraFactory;
+import uk.ac.uea.framework.implementation.AndroidOrientation;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
 
 import java.io.File;
@@ -27,11 +28,13 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     boolean init;
     View view;
     AndroidCameraFactory camera;
+    AndroidOrientation orientation;
     AutofitTextureView preview;
 
     @TargetApi(23)
     public CameraSetup(){
         camera = new AndroidCameraFactory();
+        orientation = new AndroidOrientation();
     }
 
     public void addTexture(AutofitTextureView texture){
@@ -51,7 +54,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
             camera.setPreview(newView);
             camera.addActivity(getActivity());
-
+            orientation.setActivity(getActivity());
+            orientation.setupSensor();
             System.out.println("Fragment attached to activity!");
             // camera.createCameraPreview();
             //camera.openCamera(400, 400);
@@ -64,9 +68,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     }
 
 
-    public void onCreate(Bundle saveStateInstance){
+    public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
-
     }
 
 
@@ -105,11 +108,13 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         else{
             camera.setSurfaceTextureListener();
         }
+        orientation.registerListener();
     }
 
     public void onPause(){
         super.onPause();
         camera.closeCamera();
+        orientation.unregisterListener();
     }
 
     public void onClick(View view){
