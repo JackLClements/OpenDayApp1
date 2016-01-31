@@ -11,6 +11,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 
 import uk.ac.uea.framework.implementation.AndroidCameraFactory;
 import uk.ac.uea.framework.implementation.AndroidCompass;
@@ -31,6 +32,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     AndroidCameraFactory camera;
     AndroidCompass compass;
     AutofitTextureView preview;
+    TextView text;
 
     @TargetApi(23)
     public CameraSetup(){
@@ -71,6 +73,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
     public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
+
     }
 
 
@@ -89,6 +92,10 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         if(view.findViewById(R.id.texture) != null){
             this.view = view.findViewById(R.id.texture);
             //camera.setmSurface((AutofitTextureView) view.findViewById(R.id.texture));
+        }
+        if(view.findViewById(R.id.Text) != null){
+            text = (TextView) view.findViewById(R.id.Text);
+            text.setText("Hello World");
         }
     }
 
