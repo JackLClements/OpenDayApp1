@@ -17,6 +17,7 @@ public class AndroidCompass implements Orientation {
     /**Sensor object representing the device accelerometer */
     private Sensor magneticFieldSensor;
     private Activity activity;
+    private float[] magneticValues;
 
     /**
      * Nested class implementation of the SensorEventListener interface.
@@ -27,7 +28,12 @@ public class AndroidCompass implements Orientation {
         public void onSensorChanged(SensorEvent sensorEvent) {
             Sensor mySensor = sensorEvent.sensor;
             if(mySensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+                magneticValues = new float[3];
                 //code to handle magnetic field
+                for(int i = 0; i < 3; i++){
+                    magneticValues[i] = sensorEvent.values[i];
+                }
+                System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
             } //test values before calculating anything else
         }
 

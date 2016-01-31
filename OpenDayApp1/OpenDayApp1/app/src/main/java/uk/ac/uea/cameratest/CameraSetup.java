@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import uk.ac.uea.framework.implementation.AndroidCameraFactory;
+import uk.ac.uea.framework.implementation.AndroidCompass;
 import uk.ac.uea.framework.implementation.AndroidOrientation;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
 
@@ -29,12 +30,14 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     View view;
     AndroidCameraFactory camera;
     AndroidOrientation orientation;
+    AndroidCompass compass;
     AutofitTextureView preview;
 
     @TargetApi(23)
     public CameraSetup(){
         camera = new AndroidCameraFactory();
         orientation = new AndroidOrientation();
+        compass = new AndroidCompass();
     }
 
     public void addTexture(AutofitTextureView texture){
@@ -56,6 +59,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
             camera.addActivity(getActivity());
             orientation.setActivity(getActivity());
             orientation.setupSensor();
+            compass.setActivity(getActivity());
+            compass.setupSensor();
             System.out.println("Fragment attached to activity!");
             // camera.createCameraPreview();
             //camera.openCamera(400, 400);
@@ -109,12 +114,14 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
             camera.setSurfaceTextureListener();
         }
         orientation.registerListener();
+        compass.registerListener();
     }
 
     public void onPause(){
         super.onPause();
         camera.closeCamera();
         orientation.unregisterListener();
+        compass.unregisterListener();
     }
 
     public void onClick(View view){

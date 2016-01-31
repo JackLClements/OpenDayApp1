@@ -31,7 +31,7 @@ public class AndroidOrientation implements Orientation{
                 float x = sensorEvent.values[0];
                 float y = sensorEvent.values[1];
                 float z = sensorEvent.values[2];
-                System.out.println(x + " " + y + " " + z);
+                //System.out.println(x + " " + y + " " + z);
             } //test values before calculating anything else
         }
 
