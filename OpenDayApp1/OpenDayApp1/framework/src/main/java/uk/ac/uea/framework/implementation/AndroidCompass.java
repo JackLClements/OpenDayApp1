@@ -20,6 +20,7 @@ public class AndroidCompass implements Orientation {
     private Activity activity;
     private float[] magneticValues;
     private float[] accelValues;
+    Double degToInt;
 
     /**
      * Nested class implementation of the SensorEventListener interface.
@@ -101,7 +102,11 @@ public class AndroidCompass implements Orientation {
         if (azimuthInDegress < 0.0f) {
             azimuthInDegress += 360.0f;
         }
-        Double degToInt = (Double) azimuthInDegress;
+        degToInt = (Double) azimuthInDegress;
         System.out.println("YOU ARE POINTING - " + degToInt.intValue());
+    }
+
+    public int getAngle(){
+        return degToInt.intValue();
     }
 }

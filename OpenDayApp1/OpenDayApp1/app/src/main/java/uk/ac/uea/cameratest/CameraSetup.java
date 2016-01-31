@@ -29,14 +29,12 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     boolean init;
     View view;
     AndroidCameraFactory camera;
-    AndroidOrientation orientation;
     AndroidCompass compass;
     AutofitTextureView preview;
 
     @TargetApi(23)
     public CameraSetup(){
         camera = new AndroidCameraFactory();
-        orientation = new AndroidOrientation();
         compass = new AndroidCompass();
     }
 
@@ -57,8 +55,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
             camera.setPreview(newView);
             camera.addActivity(getActivity());
-            orientation.setActivity(getActivity());
-            orientation.setupSensor();
             compass.setActivity(getActivity());
             compass.setupSensor();
             System.out.println("Fragment attached to activity!");
@@ -113,14 +109,12 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         else{
             camera.setSurfaceTextureListener();
         }
-        orientation.registerListener();
         compass.registerListener();
     }
 
     public void onPause(){
         super.onPause();
         camera.closeCamera();
-        orientation.unregisterListener();
         compass.unregisterListener();
     }
 

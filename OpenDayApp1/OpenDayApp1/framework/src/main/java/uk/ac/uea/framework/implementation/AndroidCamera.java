@@ -93,7 +93,7 @@ public class AndroidCamera implements Camera {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
-            openCamera(width, height); //NOTE TO SELF - test ths when you get home, I think it might be wrong?
+            openCamera(height, width); //NOTE TO SELF - test ths when you get home, I think it might be wrong?
         }
 
         @Override
