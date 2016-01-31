@@ -30,7 +30,7 @@ public class AndroidCompass implements Orientation {
         public void onSensorChanged(SensorEvent sensorEvent) {
             Sensor mySensor = sensorEvent.sensor;
             if(mySensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-                magneticValues = new float[3];
+
                 //code to handle magnetic field
                 for(int i = 0; i < 3; i++){
                     magneticValues[i] = sensorEvent.values[i];
@@ -39,11 +39,12 @@ public class AndroidCompass implements Orientation {
                 //System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
             } //test values before calculating anything else
             if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                accelValues = new float[3];
+
                 for(int i = 0; i < 3; i++){
                     accelValues[i] = sensorEvent.values[i];
                 }
             }
+            calculateNorth();
         }
 
         @Override
@@ -53,7 +54,8 @@ public class AndroidCompass implements Orientation {
     };
 
     public AndroidCompass(){
-
+        magneticValues = new float[3];
+        accelValues = new float[3];
     }
 
     /**
