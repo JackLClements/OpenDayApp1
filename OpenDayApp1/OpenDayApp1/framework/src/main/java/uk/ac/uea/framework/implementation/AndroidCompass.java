@@ -16,6 +16,7 @@ public class AndroidCompass implements Orientation {
     private SensorManager sensorM;
     /**Sensor object representing the device accelerometer */
     private Sensor magneticFieldSensor;
+    private Sensor accelerometerSensor;
     private Activity activity;
     private float[] magneticValues;
 
@@ -33,8 +34,12 @@ public class AndroidCompass implements Orientation {
                 for(int i = 0; i < 3; i++){
                     magneticValues[i] = sensorEvent.values[i];
                 }
-                System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
+
+                //System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
             } //test values before calculating anything else
+            if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
+                System.out.println("ACCEL WORLD");
+            }
         }
 
         @Override
@@ -53,6 +58,7 @@ public class AndroidCompass implements Orientation {
     public void setupSensor(){
         sensorM = (SensorManager) activity.getSystemService(activity.SENSOR_SERVICE);
         magneticFieldSensor = sensorM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        accelerometerSensor = sensorM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     /**
@@ -60,13 +66,15 @@ public class AndroidCompass implements Orientation {
      */
     public void registerListener(){
         sensorM.registerListener(mSensorEventListener, magneticFieldSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorM.registerListener(mSensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     /**
      * Unregisters the listener object from the sensor, to be used when pausing or closing the app
      */
     public void unregisterListener(){
-        sensorM.unregisterListener(mSensorEventListener);
+        sensorM.unregisterListener(mSensorEventListener, magneticFieldSensor);
+        sensorM.unregisterListener(mSensorEventListener, accelerometerSensor);
     }
 
     /**
