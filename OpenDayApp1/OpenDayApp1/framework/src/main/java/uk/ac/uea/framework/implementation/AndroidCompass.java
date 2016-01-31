@@ -97,6 +97,11 @@ public class AndroidCompass implements Orientation {
         float[] oritentation = new float[3];
         sensorM.getRotationMatrix(rotR, rotI, accelValues, magneticValues);
         sensorM.getOrientation(rotR, oritentation);
-        System.out.println("Degrees from north " + Math.toDegrees(oritentation[0]));
+        double azimuthInDegress = Math.toDegrees(oritentation[0]);
+        if (azimuthInDegress < 0.0f) {
+            azimuthInDegress += 360.0f;
+        }
+        Double degToInt = (Double) azimuthInDegress;
+        System.out.println("YOU ARE POINTING - " + degToInt.intValue());
     }
 }
