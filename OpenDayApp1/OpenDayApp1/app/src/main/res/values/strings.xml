@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CameraTest</string>
+    <string name="app_name">ViewUA</string>
     <string name="picture">Pic</string>
-    <string name="description_info">An app</string>
+    <string name="description_info">An augmented reality experience only available at University of East Anglia! Stand on a marker and give it a go!</string>
 </resources>
