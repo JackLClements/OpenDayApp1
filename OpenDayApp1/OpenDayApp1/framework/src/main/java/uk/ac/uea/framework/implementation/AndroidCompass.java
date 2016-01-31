@@ -19,6 +19,7 @@ public class AndroidCompass implements Orientation {
     private Sensor accelerometerSensor;
     private Activity activity;
     private float[] magneticValues;
+    private float[] accelValues;
 
     /**
      * Nested class implementation of the SensorEventListener interface.
@@ -38,7 +39,10 @@ public class AndroidCompass implements Orientation {
                 //System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
             } //test values before calculating anything else
             if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                System.out.println("ACCEL WORLD");
+                accelValues = new float[3];
+                for(int i = 0; i < 3; i++){
+                    accelValues[i] = sensorEvent.values[i];
+                }
             }
         }
 
@@ -83,5 +87,14 @@ public class AndroidCompass implements Orientation {
      */
     public void setActivity(Activity activity){
         this.activity = activity;
+    }
+
+    public void calculateNorth(){
+        float[] rotR = new float[9];
+        float[] rotI = new float[9];
+        float[] oritentation = new float[3];
+        sensorM.getRotationMatrix(rotR, rotI, accelValues, magneticValues);
+        sensorM.getOrientation(rotR, oritentation);
+        System.out.println("Degrees from north " + Math.toDegrees(oritentation[0]));
     }
 }
