@@ -22,6 +22,8 @@ public class AndroidCompass implements Orientation {
     private float[] accelValues;
     Double degToInt;
 
+    private final float ALPHA = 0.25f;
+
     /**
      * Nested class implementation of the SensorEventListener interface.
      * A listener object designed to detect and react to changes in the {@link Sensor} object
@@ -36,6 +38,7 @@ public class AndroidCompass implements Orientation {
                 for(int i = 0; i < 3; i++){
                     magneticValues[i] = sensorEvent.values[i];
                 }
+                magneticValues = lowPass(sensorEvent.values.clone(), magneticValues);
 
                 //System.out.println("MAGNETS X - " + magneticValues[0] + " Y - " + magneticValues[1] + " Z - " + magneticValues[2]);
             } //test values before calculating anything else
@@ -44,6 +47,7 @@ public class AndroidCompass implements Orientation {
                 for(int i = 0; i < 3; i++){
                     accelValues[i] = sensorEvent.values[i];
                 }
+                accelValues = lowPass(sensorEvent.values.clone(), accelValues);
             }
             calculateNorth();
         }
@@ -95,9 +99,11 @@ public class AndroidCompass implements Orientation {
     public void calculateNorth(){
         float[] rotR = new float[9];
         float[] rotI = new float[9];
+        float[] remapR = new float[9];
         float[] oritentation = new float[3];
         sensorM.getRotationMatrix(rotR, rotI, accelValues, magneticValues);
-        sensorM.getOrientation(rotR, oritentation);
+        sensorM.remapCoordinateSystem(rotR, SensorManager.AXIS_X, SensorManager.AXIS_Z, remapR);
+        sensorM.getOrientation(remapR, oritentation);
         double azimuthInDegress = Math.toDegrees(oritentation[0]);
         if (azimuthInDegress < 0.0f) {
             azimuthInDegress += 360.0f;
@@ -108,5 +114,15 @@ public class AndroidCompass implements Orientation {
 
     public int getAngle(){
         return degToInt.intValue();
+    }
+
+    public float[] lowPass(float[] input, float[] output){
+        if(output == null){
+            return input;
+        }
+        for(int i = 0; i < input.length; i++){
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
     }
 }
