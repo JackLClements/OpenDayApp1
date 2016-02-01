@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.SurfaceTexture;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     TextView text;
     int angle;
     AndroidGPS gps;
+    Location currentLocation;
 
 
     @TargetApi(23)
@@ -61,8 +63,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
             camera.addActivity(getActivity());
             compass.setActivity(getActivity());
             compass.setupSensor();
-            gps.startUpdates();
-            System.out.println(gps.getCurrentLocation().toString());
+            //gps.startUpdates();
+            //System.out.println(gps.getCurrentLocation().toString());
             // camera.createCameraPreview();
             //camera.openCamera(400, 400);
             //camera.createCameraPreview();
@@ -77,10 +79,12 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
         gps = new AndroidGPS(getActivity(), 1000);
+        gps.startUpdates();
         final Handler mHandler = new Handler();
         Runnable updateUI = new Runnable() {
             @Override
             public void run() {
+                currentLocation = gps.getCurrentLocation();
                 angle = compass.getAngle();
                 text.setText(String.valueOf(angle));
                 mHandler.postDelayed(this, 1000); //this may be updating too frequently?
