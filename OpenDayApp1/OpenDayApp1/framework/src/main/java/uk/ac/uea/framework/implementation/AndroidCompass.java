@@ -61,6 +61,7 @@ public class AndroidCompass implements Orientation {
     public AndroidCompass(){
         magneticValues = new float[3];
         accelValues = new float[3];
+        degToInt = 0.0;
     }
 
     /**
@@ -109,7 +110,7 @@ public class AndroidCompass implements Orientation {
             azimuthInDegress += 360.0f;
         }
         degToInt = (Double) azimuthInDegress;
-        System.out.println("YOU ARE POINTING - " + degToInt.intValue());
+        //System.out.println("YOU ARE POINTING - " + degToInt.intValue());
     }
 
     public int getAngle(){

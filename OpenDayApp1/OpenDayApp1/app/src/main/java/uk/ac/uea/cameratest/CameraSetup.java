@@ -19,6 +19,7 @@ import uk.ac.uea.framework.implementation.AndroidOrientation;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
 
 import java.io.File;
+import android.os.Handler;
 
 import uk.ac.uea.framework.implementation.AndroidCamera;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
@@ -33,11 +34,14 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     AndroidCompass compass;
     AutofitTextureView preview;
     TextView text;
+    int angle;
+
 
     @TargetApi(23)
     public CameraSetup(){
         camera = new AndroidCameraFactory();
         compass = new AndroidCompass();
+        angle = compass.getAngle();
     }
 
     public void addTexture(AutofitTextureView texture){
@@ -49,17 +53,12 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         super.onStart();
         init = true;
         if(isAdded()){
-
-            if(view != null){
-                System.out.println("Ayyyy");
-            }
             AutofitTextureView newView = (AutofitTextureView) view;
 
             camera.setPreview(newView);
             camera.addActivity(getActivity());
             compass.setActivity(getActivity());
             compass.setupSensor();
-            System.out.println("Fragment attached to activity!");
             // camera.createCameraPreview();
             //camera.openCamera(400, 400);
             //camera.createCameraPreview();
@@ -74,12 +73,23 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
 
+        final Handler mHandler = new Handler();
+        Runnable updateUI = new Runnable() {
+            @Override
+            public void run() {
+                angle = compass.getAngle();
+                text.setText(String.valueOf(angle));
+                mHandler.postDelayed(this, 1000); //this may be updating too frequently?
+            }
+        };
+        mHandler.post(updateUI);
     }
 
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.fragment_cameratest, container, false);
+        View myInflatedView = inflater.inflate(R.layout.fragment_cameratest, container, false);
+        return myInflatedView;
     }
 
     public void onViewCreated(final View view, Bundle savedInstanceState){
@@ -95,7 +105,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         }
         if(view.findViewById(R.id.Text) != null){
             text = (TextView) view.findViewById(R.id.Text);
-            text.setText("Hello World");
         }
     }
 
