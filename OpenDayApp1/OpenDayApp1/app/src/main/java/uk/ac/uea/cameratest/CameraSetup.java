@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import uk.ac.uea.framework.implementation.AndroidCameraFactory;
 import uk.ac.uea.framework.implementation.AndroidCompass;
+import uk.ac.uea.framework.implementation.AndroidGPS;
 import uk.ac.uea.framework.implementation.AndroidOrientation;
 import uk.ac.uea.framework.implementation.AutofitTextureView;
 
@@ -35,6 +36,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     AutofitTextureView preview;
     TextView text;
     int angle;
+    AndroidGPS gps;
 
 
     @TargetApi(23)
@@ -59,6 +61,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
             camera.addActivity(getActivity());
             compass.setActivity(getActivity());
             compass.setupSensor();
+            gps.startUpdates();
+            System.out.println(gps.getCurrentLocation().toString());
             // camera.createCameraPreview();
             //camera.openCamera(400, 400);
             //camera.createCameraPreview();
@@ -72,7 +76,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
     public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
-
+        gps = new AndroidGPS(getActivity(), 1000);
         final Handler mHandler = new Handler();
         Runnable updateUI = new Runnable() {
             @Override
@@ -126,12 +130,14 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
             camera.setSurfaceTextureListener();
         }
         compass.registerListener();
+        gps.startUpdates();
     }
 
     public void onPause(){
         super.onPause();
         camera.closeCamera();
         compass.unregisterListener();
+        gps.endUpdates();
     }
 
     public void onClick(View view){
