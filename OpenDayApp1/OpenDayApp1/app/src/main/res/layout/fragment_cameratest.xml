@@ -64,7 +64,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/relativeLayout"
-        android:background="#1c1c04">
+        android:background="#010100">
 
         <LinearLayout
             android:orientation="horizontal"
