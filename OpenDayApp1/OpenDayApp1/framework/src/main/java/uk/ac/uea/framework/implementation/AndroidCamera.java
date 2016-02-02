@@ -356,7 +356,8 @@ public class AndroidCamera implements Camera {
         //checking for null? May be needed
         Matrix matrix = new Matrix();
         RectF viewR = new RectF(0, 0, width, height);
-        RectF bufferR = new RectF(0, 0, 1920, 1080); //may want to change to optimal size
+        //RectF bufferR = new RectF(0, 0, 1920, 1080); //may want to change to optimal size
+        RectF bufferR = viewR; //buffer will never change, so keep optimal size the same
         float centerX = viewR.centerX();
         float centerY = viewR.centerY();
         //scale

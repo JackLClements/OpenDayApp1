@@ -12,8 +12,11 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import uk.ac.uea.framework.Share;
 import uk.ac.uea.framework.implementation.AndroidCameraFactory;
 import uk.ac.uea.framework.implementation.AndroidCompass;
 import uk.ac.uea.framework.implementation.AndroidGPS;
@@ -138,14 +141,16 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 if((currentLocation.getLatitude() >= 52.6290 && currentLocation.getLatitude() <= 52.6300) && (currentLocation.getLongitude() >= 1.2378 && currentLocation.getLongitude() <= 1.2380)){
                     if(angle >= 30 && angle <= 60){
                         text.setText("Wardrobe");
+                        text2.setText("Don't go here.");
                     }
-                    if(angle >= 200 && angle <= 250){
+                    if(angle >= 180 && angle <= 250){
                         text.setText("Computer");
+                        text2.setText("Scenic Jack's Computer is a protected landmark, with surprisingly clean restooms.");
                     }
                 }
                 //text.setText(String.valueOf(angle));
                 //String value = currentLocation.getLatitude() + " " + currentLocation.getLongitude();
-                //text2.setText(value);
+                //text2.setText("Scenic Jack's Computer is a protected landmark, with surprisingly clean restooms.");
                 mHandler.postDelayed(this, 500); //this may be updating too frequently?
             }
         };
@@ -173,6 +178,21 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         if(view.findViewById(R.id.Text2) != null){
             text2 = (TextView) view.findViewById(R.id.Text2);
         }
+        ImageButton button = (ImageButton) view.findViewById(R.id.button2);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(((TextView)view.findViewById(R.id.Text)).getText().toString() != ""){
+                    String location = ((TextView)view.findViewById(R.id.Text)).getText().toString();
+                    String message = "I'm viewing the " + location + " at #UEAOpenDay using #ViewEA!";
+                    Share.shareText(getActivity(), message);
+                }
+                else{
+                    String message = "I'm at #UEAOpenDay using #ViewEA!";
+                    Share.shareText(getActivity(), message);
+                }
+            }
+        });
     }
 
     //@param savedInstanceState used to pass data between activities
