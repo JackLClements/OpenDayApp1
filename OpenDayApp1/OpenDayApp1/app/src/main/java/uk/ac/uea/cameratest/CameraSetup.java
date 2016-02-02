@@ -36,6 +36,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     AndroidCompass compass;
     AutofitTextureView preview;
     TextView text;
+    TextView text2;
     int angle;
     AndroidGPS gps;
     Location currentLocation;
@@ -87,6 +88,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 currentLocation = gps.getCurrentLocation();
                 angle = compass.getAngle();
                 text.setText(String.valueOf(angle));
+                String value = currentLocation.getLatitude() + " " + currentLocation.getLongitude();
+                text2.setText(value);
                 mHandler.postDelayed(this, 1000); //this may be updating too frequently?
             }
         };
@@ -101,9 +104,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     }
 
     public void onViewCreated(final View view, Bundle savedInstanceState){
-        if(view.findViewById(R.id.picture) != null){
-            view.findViewById(R.id.picture).setOnClickListener(this);
-        }
         if(view.findViewById(R.id.info) != null){
             view.findViewById(R.id.info).setOnClickListener(this);
         }
@@ -113,6 +113,9 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         }
         if(view.findViewById(R.id.Text) != null){
             text = (TextView) view.findViewById(R.id.Text);
+        }
+        if(view.findViewById(R.id.Text2) != null){
+            text2 = (TextView) view.findViewById(R.id.Text2);
         }
     }
 
