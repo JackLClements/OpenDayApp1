@@ -3,6 +3,7 @@ package uk.ac.uea.cameratest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.location.Location;
 import android.os.Bundle;
@@ -178,8 +179,8 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         if(view.findViewById(R.id.Text2) != null){
             text2 = (TextView) view.findViewById(R.id.Text2);
         }
-        ImageButton button = (ImageButton) view.findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageButton button2 = (ImageButton) view.findViewById(R.id.button3);
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(((TextView)view.findViewById(R.id.Text)).getText().toString() != ""){
@@ -193,7 +194,21 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 }
             }
         });
+        ImageButton button = (ImageButton) view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent getHelpPage = new Intent(CameraSetup.this.getActivity(),HelpPage.class);
+
+                startActivity(getHelpPage);
+
+            }
+        });
+
     }
+
+
 
     //@param savedInstanceState used to pass data between activities
     public void onActivityCreated(Bundle savedInstanceState){

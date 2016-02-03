@@ -24,6 +24,7 @@ public class CameraActivity extends Activity {
         //Creates proper aspect ratio for 16:9 capture by removing notification bar and title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         //set up preview texture
         AutofitTextureView preview = (AutofitTextureView) findViewById(R.id.texture);
         //now texture has been set up, it needs connecting to the surface listener
