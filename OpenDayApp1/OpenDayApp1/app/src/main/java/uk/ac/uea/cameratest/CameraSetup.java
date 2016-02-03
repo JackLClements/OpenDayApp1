@@ -133,10 +133,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                         text.setText("LCR");
                         text2.setText("UEA's number one night out spot! Plays hosts to gigs, parties and lots of guest DJs.");
                     }
-                    else{
-                        text.setText(" ");
-                        text2.setText(" ");
-                    }
                 }
                 if((currentLocation.getLatitude() >= 52.6208 && currentLocation.getLatitude() <= 52.6210) && (currentLocation.getLongitude() >= 1.2405 && currentLocation.getLongitude() <= 1.2407)){
                     if((angle >= 300 && angle <= 360) || angle <= 10){
@@ -151,9 +147,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                         text.setText("Norfolk & Suffolk Terrace");
                         text2.setText("Named after our home and neighbouring counties, these affordable, spacious flats are where you'll make friends that last a lifetime");
                     }
-                    else{
-                        text.setText("");
-                    }
                 }
                 if((currentLocation.getLatitude() >= 52.6216 && currentLocation.getLatitude() <= 52.6218) && (currentLocation.getLongitude() >= 1.2368 && currentLocation.getLongitude() <= 1.2370)){
                     if((angle >= 0 && angle <= 60) || (angle >= 330 && angle <= 360)){
@@ -167,9 +160,6 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                     if(angle >= 75 && angle <= 100){
                         text.setText("More computers");
                         text2.setText("Also computers. These ones resent being installed with a sentience algorithm that runs on startup. Talks about you behind your back.");
-                    }
-                    else{
-                        text.setText("");
                     }
                 }
                 if((currentLocation.getLatitude() >= 52.6290 && currentLocation.getLatitude() <= 52.6300) && (currentLocation.getLongitude() >= 1.2378 && currentLocation.getLongitude() <= 1.2380)){
