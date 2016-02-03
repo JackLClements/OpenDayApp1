@@ -5,9 +5,10 @@ Current status
 - Control fragment written
 - Active surfacetexture written and implemented
 - Basic app behaviour finalised
-
-Yet to be done
 - Active graphics over camera preview
 - GPS/Location services
+
+Yet to be done
+- Help page
 
 
