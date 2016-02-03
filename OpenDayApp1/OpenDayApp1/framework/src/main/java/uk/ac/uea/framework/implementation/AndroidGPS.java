@@ -58,6 +58,9 @@ public class AndroidGPS implements GPS {
         Log.d("AndroidGPS: ", "Instance Created");
     }
 
+    /**
+     * Starts the updates via the listener for the active GPS location
+     */
     public void startUpdates(){
         //Add correct criteria
         Criteria criteria = new Criteria();
@@ -68,19 +71,36 @@ public class AndroidGPS implements GPS {
         locationManager.requestLocationUpdates(provider, period*1000, 0, locationListener);
     }
 
+    /**
+     * Stops the updates via the listener
+     */
     public void endUpdates(){
         // Stop updating the user's location
         locationManager.removeUpdates(locationListener);
     }
 
+    /**
+     *
+     * @return current location
+     */
     public Location getCurrentLocation(){
         return currentLocation;
     }
 
+    /**
+     * Sets period of time to update
+     * @param period number of seconds for the handler to update
+     */
     public void setPeriod(int period){
         this.period = period;
     }
 
+    /**
+     * Checks the proximity of you to the destination
+     * @param range The minimum distance required to be "within range" of the destination.
+     * @param destination The location the device is travelling to.
+     * @return true if if the distance is less than the range
+     */
     public boolean proximityCheck(double range, Location destination){
         double distance = currentLocation.distanceTo(destination);
         if (distance <= range){

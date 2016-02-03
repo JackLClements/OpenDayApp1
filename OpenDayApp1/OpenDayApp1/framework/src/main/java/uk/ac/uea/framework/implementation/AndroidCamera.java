@@ -46,6 +46,8 @@ import uk.ac.uea.framework.Camera;
 
 /**
  * Created by Jack L. Clements on 24/11/2015.
+ * Camera object that implements the Camera interface utilising the Camera2 API, a list of asynch calls.
+ * Don't meddle with this code if you can get away with it, the nature of the method calls make it VERY complex.
  */
 @TargetApi(21)
 public class AndroidCamera implements Camera {
@@ -90,30 +92,55 @@ public class AndroidCamera implements Camera {
      */
     private final TextureView.SurfaceTextureListener mSurfaceTextureListener
             = new TextureView.SurfaceTextureListener() {
-
+        /**
+         * called when the surface texture is first available
+         * @param texture
+         * @param width
+         * @param height
+         */
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
             openCamera(width, height); //NOTE TO SELF - test ths when you get home, I think it might be wrong?
         }
 
+        /**
+         * Called when the texture neeeds to be resized (change of orientation, etc.)
+         * @param texture
+         * @param width
+         * @param height
+         */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
             configureTransform(width, height);
         }
 
+        /**
+         * called when surfaceTexture is destroyed
+         * @param texture
+         * @return
+         */
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
             return true;
         }
 
+        /**
+         * Called on the update of the texture
+         * @param texture
+         */
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture texture) {
         }
 
     };
-
+    /**
+     * Instantiation of the statecallback interface, used for camera action
+     */
     private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback(){
-
+        /**
+         * Sets the camera device and establishes the preview
+         * @param cDevice
+         */
         @Override
         public void onOpened(@NonNull CameraDevice cDevice){
             //release camera lock
@@ -121,6 +148,10 @@ public class AndroidCamera implements Camera {
             createCameraPreview();
         }
 
+        /**
+         * Closes camera connection
+         * @param cDevice
+         */
         @Override
         public void onDisconnected(@NonNull CameraDevice cDevice){
             //release lock
@@ -128,6 +159,11 @@ public class AndroidCamera implements Camera {
             device = null;
         }
 
+        /**
+         * Finishes activity, and handles errors to prevent loss of data
+         * @param cDevice
+         * @param error
+         */
         @Override
         public void onError(@NonNull CameraDevice cDevice, int error){
             //release lock
@@ -139,14 +175,19 @@ public class AndroidCamera implements Camera {
             }
         }
     };
-
+    /**
+     * Instance of imagereader listner, acquires the file.
+     */
     private final ImageReader.OnImageAvailableListener mOnAvailableListener = new ImageReader.OnImageAvailableListener(){
         @Override
         public void onImageAvailable(ImageReader reader){
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), file));
         }
     };
-
+    /**
+     * Instance of a capturecallback, making sure that the autofocus cannot be called during lock.
+     * Can be used with semaphore, but as no picture data is needed in this app, it is not implemented.
+     */
     private CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback(){
         public void process(CaptureResult result){
             switch(state){
@@ -161,11 +202,23 @@ public class AndroidCamera implements Camera {
             }
         }
 
+        /**
+         * Processes capture session on progression
+         * @param session
+         * @param request
+         * @param partialResult
+         */
         @Override
         public void onCaptureProgressed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureResult partialResult){
             process(partialResult);
         }
 
+        /**
+         * Processes a finished capture session
+         * @param session
+         * @param request
+         * @param result
+         */
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result){
             process(result);
@@ -173,7 +226,7 @@ public class AndroidCamera implements Camera {
     };
 
     /**
-     * Static nested class
+     * Static nested class, deals with saving a new image from the camera in a seperate thread
      */
     private static class ImageSaver implements Runnable {
         private final Image image;
@@ -217,7 +270,7 @@ public class AndroidCamera implements Camera {
 
 
     /**
-     * Attaches preview texture to the parameter, I will update this javadoc later, we then need to set the listener
+     * Attaches preview texture to the object, allowing the xml to draw a camera preview
      * @param texture
      */
     public void setPreview(AutofitTextureView texture){
@@ -226,21 +279,41 @@ public class AndroidCamera implements Camera {
     }
 
     //capture request, should use ImageReader
+
+    /**
+     * Capture request, not needed for example, but if implemented could use Imagesaver class
+     */
     public void capture(){
 
     }
 
 
-    //private method needed to request camera, this shouldn't be public, if used out of scope it could be a DISASTER
+    //
+
+    /**
+     * private method needed to request camera, not used due to xml and gradle permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     public void handlePermissions(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
 
     }
 
     //Actual methods for the program
+
+    /**
+     * Chooses best camera size, not needed for example, as best size is always maxmimum
+     * @param height best height
+     * @param width best width
+     */
     public void chooseBestCameraSize(int height, int width){
 
     }
 
+    /**
+     * Establishes surfacetexture and creates the preview for the camera, must be called in onStart()
+     */
     public void createCameraPreview(){
         try{
             SurfaceTexture texture = preview.getSurfaceTexture();
@@ -291,10 +364,18 @@ public class AndroidCamera implements Camera {
         }
     }
 
+    /**
+     * Depricated method, no longer needed
+     */
     public void openCamera(){
 
     }
 
+    /**
+     * Opens the camera for the height/width
+     * @param height camera height
+     * @param width camera width
+     */
     public void openCamera(int height, int width){
 
         //if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
@@ -324,6 +405,10 @@ public class AndroidCamera implements Camera {
         //}
     }
 
+    /**
+     * Sets up manager, parameters, etc.
+     * CameraManager cycles through the list of the cameras and choses the first camera that ISN'T front-facing
+     */
     public void cameraSetUp(){
         //Activity activity = getActivity();
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
@@ -351,6 +436,11 @@ public class AndroidCamera implements Camera {
         }
     }
 
+    /**
+     * Sets up the transformation matrix for the specified height/width, must be called whenever a texture is constructed or changed
+     * @param width
+     * @param height
+     */
     public void configureTransform(int width, int height){
         //Activity activity = getActivity();
         //checking for null? May be needed
@@ -368,6 +458,9 @@ public class AndroidCamera implements Camera {
         preview.setTransform(matrix);
     }
 
+    /**
+     * closes the session and device
+     */
     public void closeCamera(){
         if(session != null){
             session.close();
@@ -376,10 +469,18 @@ public class AndroidCamera implements Camera {
         }
     }
 
+    /**
+     * Depricated, but sends a message when an image is captured
+     * @param string
+     */
     public void captureMessage(String string){
 
     }
 
+    /**
+     * Returns the status of the texture view
+     * @return returns true if the texture is available
+     */
     public boolean textureViewStatus(){
         System.out.println("PREVIEW STATUS " + preview.isAvailable());
         if(preview.isAvailable()){
@@ -390,10 +491,17 @@ public class AndroidCamera implements Camera {
         }
     }
 
+    /**
+     * Attaches parent activity to class for API calls
+     * @param nActivity
+     */
     public void addActivity(Activity nActivity){
         activity = nActivity;
     }
 
+    /**
+     * Attaches surface texture listener to the texture object. MUST BE CALLED.
+     */
     public void setSurfaceTextureListener(){
         preview.setSurfaceTextureListener(mSurfaceTextureListener);
     }

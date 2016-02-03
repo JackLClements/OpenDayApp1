@@ -8,9 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Activity that displays app information for confused users when clicked
+ */
 public class HelpPage extends Activity implements View.OnClickListener {
 
-
+    /**
+     * Sets up content from app previous state
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +27,10 @@ public class HelpPage extends Activity implements View.OnClickListener {
 
     }
 
+    /**
+     * Dictates events when buttpons are clicked
+     * @param v
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button:
@@ -35,13 +45,20 @@ public class HelpPage extends Activity implements View.OnClickListener {
         }
     }
 
-
+    /**
+     * Dictates events when the hardware button "back" is clicked
+     */
     private void onClickBack() {
         Intent getMapsPage = new Intent(this,CameraActivity.class);
 
         startActivity(getMapsPage);
     }
 
+    /**
+     * Creates options menu from menu object
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -49,6 +66,11 @@ public class HelpPage extends Activity implements View.OnClickListener {
         return true;
     }
 
+    /**
+     * Defines behaviour when a menu item is clicked
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

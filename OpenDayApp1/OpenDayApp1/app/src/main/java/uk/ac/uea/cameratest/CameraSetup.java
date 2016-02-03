@@ -34,34 +34,52 @@ import uk.ac.uea.framework.implementation.AutofitTextureView;
  * Created by jackc on 29/11/2015.
  */
 public class CameraSetup extends Fragment implements View.OnClickListener{
+    /**Checks for initialisation of singleton objects */
     boolean init;
     View view;
+    /**Abstract factory that contains code for both API levels of camera */
     AndroidCameraFactory camera;
+    /**Stores the compass for the app */
     AndroidCompass compass;
+    /**Holds the data for the texture, to be passed to a listener in the camera class */
     AutofitTextureView preview;
+    /**TextView box for the title of a building */
     TextView text;
+    /**TextView box for the info of a building */
     TextView text2;
+    /**Angle from north in deg. (azimuth) that user is facing */
     int angle;
+    /**GPS location */
     AndroidGPS gps;
     Location currentLocation;
 
 
     @TargetApi(23)
+    /**
+     * Default constructor for camera fragment. Initialises the compass and camrea factory
+     */
     public CameraSetup(){
         camera = new AndroidCameraFactory();
         compass = new AndroidCompass();
         angle = compass.getAngle();
     }
 
+    /**
+     * Setter for the texture
+     * @param texture texture passed from main activity, must be added to camera
+     */
     public void addTexture(AutofitTextureView texture){
         preview = texture;
         //then pass this to the camera so it can be attached to a surfacelistener
     }
 
+    /**
+     * Method to be run during the "Start" phase of the fragment lifecycle, after creation
+     */
     public void onStart(){
         super.onStart();
         init = true;
-        if(isAdded()){
+        if(isAdded()){ //if fragment is attached
             AutofitTextureView newView = (AutofitTextureView) view;
 
             camera.setPreview(newView);
@@ -80,7 +98,10 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         }
     }
 
-
+    /**
+     * Method to be run during the "create" phase of the fragment lifecycle
+     * @param saveStateInstance previous instance of app
+     */
     public void onCreate(Bundle saveStateInstance) {
         super.onCreate(saveStateInstance);
         gps = new AndroidGPS(getActivity(), 1);
@@ -94,32 +115,41 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 if((currentLocation.getLatitude() >= 52.6126 && currentLocation.getLatitude() <= 52.6218) && (currentLocation.getLongitude() >= 1.2408 && currentLocation.getLongitude() <= 1.2411)){
                     if((angle >= 330 && angle <= 360) || angle <= 10){
                         text.setText("Multifaith Centre");
+                        text2.setText("A safe-space for people of all religions. With private rooms and a common room, you're welcome here no matter what your beliefs.");
                     }
                     if(angle >= 85 && angle <= 150){
                         text.setText("Union Bar");
+                        text2.setText("Drinks galore and much, much more! All at a reasonable price.");
                     }
                     if(angle >= 160 && angle <= 200){
                         text.setText("The Street");
+                        text2.setText("UEA's very own miniature high-street, with a Waterstones, Ziggy's cafe and The Shop.");
                     }
                     if(angle >= 201 && angle <= 310){
                         text.setText("Campus Kitchen");
+                        text2.setText("From breakfast to dinner and everything in between!");
                     }
                     if(angle >= 50 && angle <= 80){
                         text.setText("LCR");
+                        text2.setText("UEA's number one night out spot! Plays hosts to gigs, parties and lots of guest DJs.");
                     }
                     else{
                         text.setText(" ");
+                        text2.setText(" ");
                     }
                 }
                 if((currentLocation.getLatitude() >= 52.6208 && currentLocation.getLatitude() <= 52.6210) && (currentLocation.getLongitude() >= 1.2405 && currentLocation.getLongitude() <= 1.2407)){
                     if((angle >= 300 && angle <= 360) || angle <= 10){
                         text.setText("Lecture Theatres 1-4");
+                        text2.setText("UEA's main lecture theatres, chances are you'll end up in here at some point!");
                     }
                     if(angle >= 120 && angle <= 170){
                         text.setText("Library");
+                        text2.setText("Open 24/7/365, the library is the perfect study space, for both quiet solo study and noisy group projects!");
                     }
                     if(angle >= 200 && angle <= 270){
                         text.setText("Norfolk & Suffolk Terrace");
+                        text2.setText("Named after our home and neighbouring counties, these affordable, spacious flats are where you'll make friends that last a lifetime");
                     }
                     else{
                         text.setText("");
@@ -128,12 +158,15 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
                 if((currentLocation.getLatitude() >= 52.6216 && currentLocation.getLatitude() <= 52.6218) && (currentLocation.getLongitude() >= 1.2368 && currentLocation.getLongitude() <= 1.2370)){
                     if((angle >= 0 && angle <= 60) || (angle >= 330 && angle <= 360)){
                         text.setText("The Outside");
+                        text2.setText("CompSci students rarely see much of this. A scary place full of humans");
                     }
                     if(angle >= 200 && angle <= 270){
                         text.setText("Computers");
+                        text2.setText("101010101010 I'm speaking computer! Hello World!");
                     }
                     if(angle >= 75 && angle <= 100){
                         text.setText("More computers");
+                        text2.setText("Also computers. These ones resent being installed with a sentience algorithm that runs on startup. Talks about you behind your back.");
                     }
                     else{
                         text.setText("");
@@ -159,12 +192,23 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
     }
 
 
-
+    /**
+     * method to get view when fragment is created
+     * @param inflater inflater object to get surrounding view
+     * @param container the container containing the specific views we wish to access
+     * @param savedInstanceState previous state of app
+     * @return
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View myInflatedView = inflater.inflate(R.layout.fragment_cameratest, container, false);
         return myInflatedView;
     }
 
+    /**
+     * Method to be run after the view is created
+     * @param view view associated with app, after onCreateView is called
+     * @param savedInstanceState previous state of app
+     */
     public void onViewCreated(final View view, Bundle savedInstanceState){
         if(view.findViewById(R.id.info) != null){
             view.findViewById(R.id.info).setOnClickListener(this);
@@ -182,7 +226,7 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         ImageButton button2 = (ImageButton) view.findViewById(R.id.button3);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { //share context
                 if(((TextView)view.findViewById(R.id.Text)).getText().toString() != ""){
                     String location = ((TextView)view.findViewById(R.id.Text)).getText().toString();
                     String message = "I'm viewing the " + location + " at #UEAOpenDay using #ViewEA!";
@@ -211,12 +255,21 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
 
 
     //@param savedInstanceState used to pass data between activities
+
+    /**
+     * Run on the creation of the activity
+     * @param savedInstanceState previous state of the app
+     */
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         File tempFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
     }
 
-
+    /**
+     * Run when the app is suspended and then resumed.
+     * If the app was previously open, the surfaceTextureListener does not need to be reset
+     * and the camera can be reopened using the appropriate method.
+     */
     public void onResume(){
         super.onResume();
         System.out.println(camera.textureViewStatus());
@@ -231,6 +284,9 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         gps.startUpdates();
     }
 
+    /**
+     * Suspends active background threads when the app is suspended by the user
+     */
     public void onPause(){
         super.onPause();
         camera.closeCamera();
@@ -238,6 +294,10 @@ public class CameraSetup extends Fragment implements View.OnClickListener{
         gps.endUpdates();
     }
 
+    /**
+     * Depricated method, do not use
+     * @param view
+     */
     public void onClick(View view){
 
     }

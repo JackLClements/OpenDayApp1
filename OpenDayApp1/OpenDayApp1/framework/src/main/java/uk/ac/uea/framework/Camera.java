@@ -14,6 +14,7 @@ import uk.ac.uea.framework.implementation.AutofitTextureView;
 
 /**
  * Created by Jack L. Clements on 23/11/2015.
+ * Interface defining core set of features all camera implementations should implement
  */
 public interface Camera{
     public enum Orientations{
@@ -58,26 +59,60 @@ public interface Camera{
 
     public void onClick(View view);
     */
-    //private method needed to request camera, this shouldn't be public, if used out of scope it could be a DISASTER
+    /**
+     *  private method needed to request camera, this shouldn't be public, if used out of scope it could be a DISASTER
+     */
     public void handlePermissions(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
     //Actual methods for the program
+
+    /**
+     * sets best camera size
+     * @param height best height
+     * @param width best width
+     */
     public void chooseBestCameraSize(int height, int width);
 
+    /**
+     * creates preview image
+     */
     public void createCameraPreview();
 
+    /**
+     * opens camera
+     * @param height camera height
+     * @param width camera width
+     */
     public void openCamera(int height, int width);
 
+    /**
+     * closes camera
+     */
     public void closeCamera();
 
     public void captureMessage(String string);
 
+    /**
+     * Attaches texture to textureListener
+     * @param texture
+     */
     public void setPreview(AutofitTextureView texture);
 
+    /**
+     * sets parent activity for API calls
+     * @param activity
+     */
     public void addActivity(Activity activity);
 
+    /**
+     * Establishes the surface texture listener
+     */
     public void setSurfaceTextureListener();
 
+    /**
+     * returns true if the texture view is not null
+     * @return
+     */
     public boolean textureViewStatus();
 
 

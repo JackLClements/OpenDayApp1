@@ -14,14 +14,19 @@ import uk.ac.uea.framework.Orientation;
 public class AndroidCompass implements Orientation {
     /**Manager object for all sensors on a device */
     private SensorManager sensorM;
-    /**Sensor object representing the device accelerometer */
+    /**Sensor object representing the device geomagnetic field sensor */
     private Sensor magneticFieldSensor;
+    /**Sensor object representing the device accelerometer*/
     private Sensor accelerometerSensor;
+    /**The activity of the parent class making the object calls */
     private Activity activity;
+    /**Last read set of magnetic field values, in format x, y, z */
     private float[] magneticValues;
+    /**Last read set of accelerometer values, in LOCAL format x, y, z (see graphics theory for more) */
     private float[] accelValues;
+    /**Double object used to convert the final north value to an int */
     Double degToInt;
-
+    /**Alpha value used for lowpass filter */
     private final float ALPHA = 0.25f;
 
     /**
@@ -29,6 +34,10 @@ public class AndroidCompass implements Orientation {
      * A listener object designed to detect and react to changes in the {@link Sensor} object
      */
     private final SensorEventListener mSensorEventListener = new SensorEventListener() {
+        /**
+         * Method run by listener when the sensor input changes
+         * @param sensorEvent
+         */
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             Sensor mySensor = sensorEvent.sensor;
@@ -52,12 +61,20 @@ public class AndroidCompass implements Orientation {
             calculateNorth();
         }
 
+        /**
+         * Called when the accuracy set changes. Accuracy will need not change for these implementations.
+         * @param sensor
+         * @param i
+         */
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
 
         }
     };
 
+    /**
+     * Default constructor, initialises arrays and objects.
+     */
     public AndroidCompass(){
         magneticValues = new float[3];
         accelValues = new float[3];
@@ -97,6 +114,11 @@ public class AndroidCompass implements Orientation {
         this.activity = activity;
     }
 
+    /**
+     * Calculates the azimuth from the given data.
+     * Gravity matrix is remapped to the upright position in order to track the camera movement.
+     * This is done with a rotation matrix - see android graphics theory for more details.
+     */
     public void calculateNorth(){
         float[] rotR = new float[9];
         float[] rotI = new float[9];
@@ -113,10 +135,21 @@ public class AndroidCompass implements Orientation {
         //System.out.println("YOU ARE POINTING - " + degToInt.intValue());
     }
 
+    /**
+     * returns the int value of the aziumuth
+     * @return
+     */
     public int getAngle(){
         return degToInt.intValue();
     }
 
+    /**
+     * A low pass filter, run through the compass data in order to eliminate erroneous results.
+     * Output is stored as a parameter and return type to calculate output.
+     * @param input input array data
+     * @param output the new, filtered data
+     * @return the output
+     */
     public float[] lowPass(float[] input, float[] output){
         if(output == null){
             return input;
